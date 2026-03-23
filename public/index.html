@@ -1,0 +1,404 @@
+<!DOCTYPE html><html lang="pt"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Sistema de Cashout</title>
+
+  <meta name="theme-color" content="#0B0F14">
+  <link rel="manifest" href="/manifest.json?v=4">
+
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/inapp-warn.css">
+  <link rel="stylesheet" href="css/curso-promo.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""> 
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- seu app realtime/push -->
+  <script async="" src="js/fbevents.js"></script><script src="js/app.js" defer=""></script>
+  <script src="js/inapp-warn.js" defer=""></script>
+  <script src="js/protect.min.js"></script>
+  <script src="js/curso-promo.js" defer=""></script>
+
+
+  <!-- UX helpers (toasts/ações) -->
+  <script src="js/ux.js" defer=""></script>
+  <!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '336965031445587');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=336965031445587&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+
+</head>
+
+<body>
+
+  <div id="toast-stack" class="toast-stack"></div>
+
+<!-- In-app Browser Warning -->
+<div id="inAppWarn" class="inapp-warn" style="display:none">
+  <button class="inapp-close" id="inAppClose" aria-label="Fechar">×</button>
+
+  <div class="inapp-row">
+    <div class="inapp-icon">⚠️</div>
+
+    <div class="inapp-txt">
+      <p class="inapp-title">Estás no navegador do Facebook/Instagram</p>
+      <p class="inapp-msg" id="inAppMsg">
+        Para as notificações funcionarem bem, abre este link no Chrome/Safari.
+      </p>
+
+      <div class="inapp-actions">
+        <button class="inapp-primary" id="inAppCopy">Copiar link</button>
+        <button class="inapp-ghost" id="inAppHow">Como abrir no navegador</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="inAppGuide" class="inapp-guide" role="dialog" aria-modal="true" style="display:none">
+  <div class="inapp-card">
+    <p class="inapp-h">Como abrir no navegador</p>
+    <p class="inapp-p" id="inAppStepsText"></p>
+    <ol class="inapp-steps" id="inAppSteps"></ol>
+
+    <div class="inapp-footer">
+      <button class="inapp-ghost" id="inAppGuideClose">Fechar</button>
+    </div>
+  </div>
+</div>
+<!-- /In-app Browser Warning -->
+
+
+
+  <div id="leadGate" class="lead-gate">
+
+    <div class="lead-card">
+
+      <div class="lead-logo-container">
+
+        <img src="images/icon-192.png" alt="Logo" class="lead-logo-img">
+
+      </div>
+
+      
+
+      <h2>Acesso Exclusivo</h2>
+
+      <p>Libere os sinais de alta assertividade agora</p>
+
+
+
+      <form id="leadForm">
+
+        <div class="input-group">
+
+          <input type="text" id="leadNome" placeholder="Seu nome completo" required="">
+
+        </div>
+
+        
+
+        <div class="input-group">
+
+          <input type="tel" id="leadWhatsapp" placeholder="WhatsApp (ex: 84xxxxxxx)" required="">
+
+          <span id="whatsError" class="error-msg">Número inválido</span>
+
+        </div>
+
+
+
+        <button type="submit" id="btnLead">DESBLOQUEAR ACESSO</button>
+
+      </form>
+
+
+
+      <div class="lead-footer">
+
+        <span> Conexão segura e criptografada</span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Safe area iOS -->
+  <div class="safe-area">
+
+    <!-- Top App Bar -->
+    <header class="appbar">
+      <div class="brand">
+        <img class="logo" src="images/icon-192.png" alt="Logo">
+        <div class="titles">
+          <h1>Sistema Cashout</h1>
+          <span class="subtitle" data-subtitle="connection">Conectando …</span>
+        </div>
+      </div>
+      <button class="chip chip-live" aria-live="polite" data-status="realtime">
+        • Sistema Ativo <span id="onlineCount"></span>
+      </button>
+
+    </header>
+
+    <!-- Conteúdo -->
+    <main class="content">
+
+
+
+      <div id="pushGate" class="push-gate" aria-hidden="true">
+        <div class="push-gate__card">
+          <div class="push-gate__icon">🔔</div>
+          <h3 class="push-gate__title">Ativa os Alertas</h3>
+          <p class="push-gate__text">
+            Sem notificações vais perder sinais. Ativa agora para receber <b>SINAIS</b> mesmo com o ecrã fechado.
+          </p>
+
+          <div class="push-gate__bullets">
+            <div class="b"> Avisa quando tem sinal </div>
+            <div class="b"> Ajuda a ficar atento</div>
+          </div>
+
+          <button id="pushGateEnable" class="push-gate__btn push-gate__btn--primary">
+            Ativar Notificações
+          </button>
+
+          <button id="pushGateSkip" class="push-gate__btn push-gate__btn--ghost" disabled="">
+            Agora não (<span id="pushGateCountdown">6</span>s)
+          </button>
+        </div>
+      </div>
+
+
+      <div class="card mini">
+              <h3 class="velas-title">
+                <span id="velas-status" class="analisando">
+                  <span class="ping"></span>
+                  <span>Analisando velas</span>
+                  <span class="dots"><i></i><i></i><i></i></span>
+                </span>
+              </h3>
+              
+              <div class="liveviz">
+                <div class="live-vela" aria-label="Vela atual">
+                  <span id="live-dot" class="live-dot wait"></span>
+                  <span id="live-valor" class="live-valor">--</span>
+                  <span class="live-label">agora</span>
+                </div>
+                <svg id="sparkline" class="sparkline" viewBox="0 0 100 30" preserveAspectRatio="none" aria-label="Tendência"></svg>
+                <div id="terminalTape" class="terminal-tape" aria-label="Terminal Tape"></div>
+
+              </div>
+
+              <ul id="velas" class="velas"></ul>
+            </div>
+
+
+      <!-- Card Entrada -->
+
+      <div id="banner-estrategia" style="display:none; background: #1a1f26; border-left: 4px solid #f1c40f; padding: 12px; border-radius: 8px; margin-bottom: 10px; color: #fff; font-size: 14px; font-weight: 600;">
+        <span id="texto-meta"> Analisando padrões...</span>
+      </div>
+
+      <div id="signal-slot" class="signal-slot"></div>
+      
+
+      <div class="card highlight">
+        <div class="card-head">
+          <h2>Estatísticas de Hoje</h2>
+          <div class="pill green" id="stat-percent-text">0% Acertos</div>
+        </div>
+
+        <div class="entry-grid">
+          <div class="entry-metric">
+            <div class="label">VITÓRIAS</div>
+            <div class="value" style="color: var(--live);" id="count-wins">0</div>
+          </div>
+          <div class="entry-metric">
+            <div class="label">DERROTAS</div>
+            <div class="value" style="color: var(--danger);" id="count-loss">0</div>
+          </div>
+          <div class="entry-metric">
+            <div class="label">TOTAL</div>
+            <div class="value" id="count-total">0</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 15px; background: var(--stroke); height: 6px; border-radius: 10px; overflow: hidden;">
+          <div id="stat-percent-bar" style="width: 0%; height: 100%; background: var(--primary); transition: width 0.8s ease;"></div>
+        </div>
+        
+        <div class="actions">
+          <button class="btn btn-primary" id="openGame">Apostar</button>
+          <button class="btn btn-warn" data-action="ativar-push" id="pushbtn">Ativar Alerta</button>
+        </div>
+
+      </div>
+
+
+      <!-- Card Histórico -->
+      <section class="card">
+        <div class="card-head">
+          <h2>Histórico</h2>
+          <div class="filters">
+            <button class="chip" data-filter="all" aria-pressed="true">Tudo</button>
+            <button class="chip" data-filter="green">Green</button>
+            <button class="chip" data-filter="loss">Loss</button>
+          </div>
+        </div>
+
+        <ul class="history" data-table="historico">
+          <!-- app.js vai inserir <li> -->
+        </ul>
+
+        <div class="hint">Puxe para baixo para atualizar</div>
+      </section>
+
+    </main>
+
+
+
+<section class="tutorial-wrap" id="tutorial">
+  <div class="cta-push" role="status" aria-live="polite">
+    <div class="cta-icon"></div>
+    <div class="cta-text">
+      <strong>Ative os alertas!</strong>
+      <span>Para receber os sinais mesmo com o app fechado.</span>
+    </div>
+    <button class="btn btn-warn cta-btn" id="cta-ativar-push">Ativar notificações</button>
+  </div>
+
+    <div class="video-frame">
+  <iframe id="tutorialVideo" class="tutorial-video" src="https://www.youtube.com/embed/uSICVLdrmBU?rel=0&modestbranding=1&playsinline=1" title="Tutorial Sistema" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="">
+  </iframe>
+</div>
+
+  <p class="tutorial-caption">
+    Assista o video acima para <strong>aprender a usar o SISTEMA</strong> do jeito certo e conseguir lucrar no aviator.
+  </p>
+
+
+  <!-- ========== BANNER DO CURSO - SISTEMA MILIONÁRIO ========== -->
+  <!--
+
+  <section class="card">
+  <div class="curso-banner">
+    <div class="curso-banner-content">
+      <div class="curso-banner-badge">Curso Exclusivo</div>
+      
+      <h3 class="curso-banner-title">
+        🚀 <span>Sistema Milionário</span>
+      </h3>
+      
+      <p class="curso-banner-desc">
+        Domine o Aviator com estratégias avançadas e comece a lucrar de verdade!
+      </p>
+      
+      <div class="curso-banner-footer">
+        <div class="curso-price">
+          <span class="curso-price-label">Por apenas</span>
+          <span class="curso-price-value">497 <small>MT</small></span>
+        </div>
+        
+        <a href="https://wa.me/258866480859?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20o%20curso%20Sistema%20Milion%C3%A1rio" 
+           target="_blank" 
+           class="curso-banner-cta">
+          Quero o Curso
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+-->
+  <!-- ========== /BANNER DO CURSO ========== -->
+
+</section>
+
+    <!-- Toasts -->
+    <div id="toast" role="status" aria-live="polite"></div>
+
+  
+  <!-- Tutorial Visual (Overlay único) -->
+  <div id="tutorial-overlay" class="tutorial-overlay hidden" aria-hidden="true">
+    <div class="tutorial-card" role="dialog" aria-modal="true" aria-label="Tutorial">
+      <div class="tutorial-head">
+        <h3 id="tutorial-title">Tutorial</h3>
+      </div>
+
+      <div class="tutorial-body">
+        <p id="tutorial-text" class="tutorial-text"></p>
+
+        <div id="tutorial-media" class="tutorial-media hidden">
+          <img id="tutorial-img" alt="Tutorial">
+        </div>
+      </div>
+
+      <div class="tutorial-actions">
+        <button id="tutorial-next" class="tutorial-btn">Próximo</button>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  </div>
+
+  <div id="legalModal" class="legal-modal" style="display:none">
+
+    <div class="legal-card">
+
+      <div class="legal-header">
+        <h2 id="legalTitle"></h2>
+        <button id="legalClose">✕</button>
+      </div>
+
+      <div id="legalContent" class="legal-content"></div>
+
+    </div>
+
+  </div>
+
+  <footer class="site-footer">
+
+    <div class="footer-links">
+
+      <button class="footer-link" data-doc="terms">
+        Termos & Condições
+      </button>
+
+      <button class="footer-link" data-doc="privacy">
+        Política de Privacidade
+      </button>
+
+      <button class="footer-link" data-doc="risk">
+        Aviso de Risco
+      </button>
+
+    </div>
+
+    <p class="footer-disclaimer">
+      O Sistema Cashout é uma ferramenta informativa de análise de apostas.
+      Não garante ganhos e não possui qualquer ligação oficial com casas de apostas.
+    </p>
+
+  </footer>
+
+
+
+</body></html>
