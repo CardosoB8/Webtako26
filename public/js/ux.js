@@ -25,10 +25,10 @@ document.getElementById("nav-push")?.addEventListener("click", ()=>{
 });
 
 // Link fixo do jogo (sem precisar configurar manualmente)
-const GAME_URL = "http://segredodo100x.com/casapato"; // http://media1.placard.co.mz/redirect.aspx?pid=2953&bid=1514 <-- coloque aqui o link correto do jogo
+const GAME_URL = "https://media1.placard.co.mz/redirect.aspx?pid=4912&bid=1690"; // http://media1.placard.co.mz/redirect.aspx?pid=2953&bid=1514 <-- coloque aqui o link correto do jogo
 
 document.getElementById("openGame")?.addEventListener("click", ()=>{
-  window.open("/go", "_blank"); 
+  window.open("https://media1.placard.co.mz/redirect.aspx?pid=4912&bid=1690", "_blank"); 
 });
 
 // Filtro do histórico (o app.js insere <li data-status="green|loss">)
